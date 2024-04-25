@@ -42,4 +42,3 @@ def parse_arguments():
     )
 
     return parser.parse_args()
-

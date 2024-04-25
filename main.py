@@ -3,7 +3,7 @@ import sys
 from cli_module import parse_arguments
 from downloader import *
 from file_manager import *
-from web_scraper import *
+from web_scraper import get_years_list, get_indices_list
 
 
 def main():
@@ -14,7 +14,13 @@ def main():
 
     # Handle the --version argument
     if args.version:
-        print("joradp Downloader Ver 2.5.1 Copyright 2023")
+        print_ver()
+        sys.exit(0)
+
+    print_ver()
+
+    if args.help:
+        print_help()
         sys.exit(0)
 
     # Set the base directory for downloads
@@ -26,6 +32,11 @@ def main():
     try:
         # Fetch the list of available years
         years = get_years_list()
+
+        # Check if the years list is empty
+        if not years:
+            print("Error: No years found on the website.")
+            sys.exit(1)
 
         if args.year:
             # Download publications for a specific year
@@ -44,9 +55,11 @@ def main():
                     print(f"Error: Index {index} is not valid for year {year}")
                     sys.exit(1)
 
+                print(f"Download directory ... {destination_dir}")
                 download_file(year, index, destination_dir)
             else:
                 # Download all publications for the specified year
+                print(f"Download directory ... {destination_dir}")
                 for index in indices:
                     download_file(year, index, destination_dir)
 
@@ -55,6 +68,7 @@ def main():
             for year in years:
                 indices = get_indices_list(year)
                 destination_dir = get_destination_dir(str(base_dir), year, use_directories)
+                print(f"Download directory ... {destination_dir}")
                 for index in indices:
                     download_file(year, index, destination_dir)
 
@@ -63,5 +77,25 @@ def main():
         sys.exit(1)
 
 
+def print_ver():
+    print(" Python joradp Downloader Ver 2.6.0 Copyright 2023-2024")
+
+
 if __name__ == "__main__":
     main()
+
+
+def print_help():
+    print("Usage : $0 [-h] [-v] [-d] [-y YYYY] | [-y YYYY -i nnn]")
+
+    print("-h : Print out this help ... good guess")
+
+    print("-v : Display name, version and copyright")
+
+    print("-y : Download all publications for the given year (valid years: 1962-current year)")
+
+    print("-i : Download a specific publication index for the given year (requires --year)")
+
+    print("-d : Create separate directories for each year")
+
+    print("No options : Download all publications for all years from 1962 to the current year)")

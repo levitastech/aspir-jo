@@ -1,5 +1,7 @@
+import datetime
+import re
+
 import requests
-from bs4 import BeautifulSoup
 
 
 def get_years_list():
@@ -9,6 +11,7 @@ def get_years_list():
     Returns:
         list: List of years (as integers)
     """
+
     url = "https://www.joradp.dz/JRN/ZF1962.htm"
     response = requests.get(url)
 
@@ -16,11 +19,21 @@ def get_years_list():
     if response.status_code != 200:
         raise Exception(f"Failed to fetch years list (status code: {response.status_code})")
 
-    soup = BeautifulSoup(response.content, "html.parser")
+    html_content = response.text
 
     # Find all <option> tags within <select> tags and extract the years
-    year_options = soup.select("select > option")
-    years = [int(option.text) for option in year_options if option.text.isdigit()]
+
+    # Extract years using regex pattern matching
+    year_pattern = r'<option[^>]*>(\d{4})'  # r'<option[^>]*>(\d{4})</option>'
+    year_options = re.findall(year_pattern, html_content)
+
+    # Check if the year_options list is empty
+    if year_options:
+        # Convert extracted years to integers
+        years = [int(year) for year in year_options]
+        years = list(reversed(years))
+    else:
+        years = list(range(1962, datetime.datetime.now().year + 1))
 
     return years
 
@@ -42,10 +55,20 @@ def get_indices_list(year):
     if response.status_code != 200:
         raise Exception(f"Failed to fetch indices list for year {year} (status code: {response.status_code})")
 
-    soup = BeautifulSoup(response.content, "html.parser")
+    html_content = response.text
 
-    # Find all indices within <a> tags and extract the indices
-    index_links = soup.select("a[href^='FTP/jo-francais/']")
-    indices = [int(link.text.split("F")[1][:3]) for link in index_links]
+    # Extract indices using regex pattern matching
+    index_pattern = r'\">([0-9]{2,3})'
+    indices = re.findall(index_pattern, html_content)
+
+    # reverse order
+    indices = list(reversed(indices))
+
+    # ++++++ unnecessary step  , formatted in download_file()
+    # Format indices as strings with 3-character format (e.g., '001', '002', ..., '099', '100', ...)
+    # indices = [index.zfill(3) for index in indices]
+
+    # Convert extracted indices to integers
+    indices = [int(index) for index in indices]
 
     return indices
