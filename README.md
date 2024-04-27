@@ -2,7 +2,7 @@
 
 
 # aspir-jo: Python JORADP Downloader
-### Python joradp Downloader Ver 2.6.0 Copyright 2023-2024
+### Python joradp Downloader Ver 2.6.2 Copyright 2023-2024
 
 aspir-jo is a Python-based command-line application that allows you to download PDF files from the archives of the JORADP (Journal Officiel de la République Algérienne Démocratique et Populaire).
 
@@ -86,7 +86,7 @@ python main.py --help
 ## Information
 
 - Author: Reda Medani
-- Version: 2.6.0
+- Version: 2.6.2
 - Copyright: 2023-2024
 - License: [GNU GENERAL PUBLIC LICENSE Version 3](https://www.gnu.org/licenses/gpl-3.0.html)
 

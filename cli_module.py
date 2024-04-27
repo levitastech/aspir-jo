@@ -13,20 +13,20 @@ def parse_arguments():
     )
 
     # Mutually exclusive group for the main actions
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    parser.add_argument(
         "-y",
         "--year",
         type=int,
         help="Download all publications for the given year (valid years: 1962-current year)",
     )
-    group.add_argument(
+
+    # Index argument (requires --year)
+    parser.add_argument(
         "-i",
         "--index",
         type=int,
         help="Download a specific publication index for the given year (requires --year)",
     )
-
     # Optional arguments
     parser.add_argument(
         "-d",
@@ -34,6 +34,7 @@ def parse_arguments():
         action="store_true",
         help="Create separate directories for each year",
     )
+
     parser.add_argument(
         "-v",
         "--version",
@@ -41,4 +42,10 @@ def parse_arguments():
         help="Display script name, version, and copyright",
     )
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    # Validate the combination of --year and --index arguments
+    if args.index and not args.year:
+        parser.error("The --index argument requires the --year argument.")
+
+    return args
