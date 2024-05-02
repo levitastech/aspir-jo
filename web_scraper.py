@@ -3,6 +3,7 @@ import datetime
 import re
 
 import requests
+import certifi
 
 
 def get_years_list():
@@ -21,7 +22,10 @@ def get_years_list():
     # response = requests.get(url)
 
     # bypass the ssl certificate verification
-    response = requests.get(url, verify=False)
+    # response = requests.get(url, verify=False)
+
+    # try out the certifi module
+    response = requests.get(url, verify=certifi.where())
 
     # Check if the request was successful
     if response.status_code != 200:
@@ -57,14 +61,17 @@ def get_indices_list(year):
         list: List of indices (as integers)
     """
     url = f"https://www.joradp.dz/JRN/ZF{year}.htm"
-    
+
     # commented out
     # due to ssl certificate, replaced temporarily with a no_verification methode
     #
     # response = requests.get(url)
 
     # bypass the ssl certificate verification
-    response = requests.get(url, verify=False)
+    # response = requests.get(url, verify=False)
+
+    # try out the certifi module
+    response = requests.get(url, verify=certifi.where())
 
     # Check if the request was successful
     if response.status_code != 200:
