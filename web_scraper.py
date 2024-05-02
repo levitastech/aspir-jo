@@ -14,7 +14,14 @@ def get_years_list():
     """
 
     url = "https://www.joradp.dz/JRN/ZF1962.htm"
-    response = requests.get(url)
+
+    # commented out
+    # due to ssl certificate, replaced temporarily with a no_verification methode
+    #
+    # response = requests.get(url)
+
+    # bypass the ssl certificate verification
+    response = requests.get(url, verify=False)
 
     # Check if the request was successful
     if response.status_code != 200:
@@ -50,7 +57,14 @@ def get_indices_list(year):
         list: List of indices (as integers)
     """
     url = f"https://www.joradp.dz/JRN/ZF{year}.htm"
-    response = requests.get(url)
+    
+    # commented out
+    # due to ssl certificate, replaced temporarily with a no_verification methode
+    #
+    # response = requests.get(url)
+
+    # bypass the ssl certificate verification
+    response = requests.get(url, verify=False)
 
     # Check if the request was successful
     if response.status_code != 200:
